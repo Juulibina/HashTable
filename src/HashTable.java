@@ -26,15 +26,9 @@ public abstract class HashTable {
         return colisoes;
     }
 
-    protected int calcularIndice(String chave){ //calculo para transformar string em indice
-        long hash = 5381; //numero sugerido pelo criador do calculo
+    protected abstract int calcularIndice(String chave);
 
-        for (int i = 0; i < chave.length(); i++) {
-            hash = ((hash << 5) + hash) + chave.charAt(i);
-        }
 
-        return (int) Math.abs(hash % capacidade);
-    }
 
     public void imprimirTabela() {
         for (int i = 0; i < capacidade; i++) {
