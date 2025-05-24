@@ -56,7 +56,11 @@ public class HashEncadeado1 extends HashTable {
 
     @Override
     protected int calcularIndice(String chave) {
-        return Math.abs(chave.hashCode()) % capacidade;
+        long hash = 5381;
+        for (int i = 0; i < chave.length(); i++) {
+            hash = ((hash << 5) + hash) + chave.charAt(i);
+        }
+        return (int) Math.abs(hash % capacidade);
     }
 
 }
