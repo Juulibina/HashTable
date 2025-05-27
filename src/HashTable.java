@@ -35,4 +35,5 @@ public abstract class HashTable {
             System.out.println("[" + i + "] " + (tabela[i] != null ? tabela[i] : "-"));
         }
     }
+
 }
