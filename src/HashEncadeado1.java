@@ -63,16 +63,20 @@ public class HashEncadeado1 extends HashTable {
         return (int) Math.abs(hash % capacidade);
     }
 
-    public void imprimirQuantidadePorIndice() {
-        for (int i = 0; i < capacidade; i++) {
+    @Override
+    public void imprimirQuantidadePorIndice()
+    {
+        for(int i = 0; i < capacidade; i++)
+        {
             int contador = 0;
             Node atual = tabelaEncadeada[i];
-            while (atual != null) {
+            while (atual != null)
+            {
                 contador++;
                 atual = atual.proximo;
             }
-            System.out.println( "[" + i + "] tem " + contador);
+            System.out.println("[" + i + "] tem" + contador);
         }
-    }
 
+    }
 }

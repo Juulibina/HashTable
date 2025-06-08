@@ -1,3 +1,5 @@
+import javax.swing.text.TableView;
+
 public abstract class HashTable {
     protected int capacidade = 32;
     protected int tamanho;
@@ -12,7 +14,7 @@ public abstract class HashTable {
     }
 
     public abstract void inserir(String chave); //metodo para inserir dados na tabela
-    public abstract boolean buscar(String chave); //metodo para buscar dados na tabela
+    public abstract boolean buscar(String chave);//metodo para buscar dados na tabela
 
     public int getCapacidade(){
         return capacidade;
@@ -36,4 +38,5 @@ public abstract class HashTable {
         }
     }
 
+    public abstract void imprimirQuantidadePorIndice();
 }
