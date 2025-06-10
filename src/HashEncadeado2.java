@@ -3,34 +3,32 @@ public class HashEncadeado2 extends HashTable {
     private Node[] tabelaEncadeada;
 
     public HashEncadeado2() {
-        super(32); // capacidade da tabela
+        super(32);
         tabelaEncadeada = new Node[capacidade];
     }
 
     @Override
     public void inserir(String chave) {
+        if (tamanho >= capacidade * fatorDeCarga) {
+            rehash();
+        }
         int indice = calcularIndice(chave);
-
         Node atual = tabelaEncadeada[indice];
         if (atual == null) {
             tabelaEncadeada[indice] = new Node(chave);
-            tamanho++;
         } else {
-            // Já tem algo na posição = colisão
             colisoes++;
-            // Insere no início (ou final, como preferir)
             Node novo = new Node(chave);
             novo.proximo = atual;
             tabelaEncadeada[indice] = novo;
-            tamanho++;
         }
+        tamanho++;
     }
 
     @Override
     public boolean buscar(String chave) {
         int indice = calcularIndice(chave);
         Node atual = tabelaEncadeada[indice];
-
         while (atual != null) {
             if (atual.chave.equals(chave)) {
                 return true;
@@ -40,7 +38,48 @@ public class HashEncadeado2 extends HashTable {
         return false;
     }
 
-    // Sobrescrevendo o modo de imprimir
+    @Override
+    protected int calcularIndice(String chave) {
+        int hash = 7;
+        for (char c : chave.toCharArray()) {
+            hash = hash * 31 + c;
+        }
+        return Math.abs(hash) % capacidade;
+    }
+
+    @Override
+    protected void reinserirTodos(Node[] novaTabela, int novaCapacidade) {
+        for (Node head : tabelaEncadeada) {
+            Node atual = head;
+            while (atual != null) {
+                String chave = atual.chave;
+                int novoIndice = calcularIndice(chave, novaCapacidade);
+                Node novo = new Node(chave);
+                novo.proximo = novaTabela[novoIndice];
+                novaTabela[novoIndice] = novo;
+                atual = atual.proximo;
+            }
+        }
+    }
+
+    @Override
+    protected void atualizarTabela(Node[] novaTabela) {
+        this.tabelaEncadeada = novaTabela;
+    }
+
+    @Override
+    public void imprimirQuantidadePorIndice() {
+        for (int i = 0; i < capacidade; i++) {
+            int contador = 0;
+            Node atual = tabelaEncadeada[i];
+            while (atual != null) {
+                contador++;
+                atual = atual.proximo;
+            }
+            System.out.println("[" + i + "] tem " + contador);
+        }
+    }
+
     @Override
     public void imprimirTabela() {
         for (int i = 0; i < capacidade; i++) {
@@ -52,30 +91,5 @@ public class HashEncadeado2 extends HashTable {
             }
             System.out.println("null");
         }
-    }
-
-    @Override
-    protected int calcularIndice(String chave) {
-            int hash = 7;
-            for (char c : chave.toCharArray()) {
-                hash = hash * 31 + c;
-            }
-            return Math.abs(hash) % capacidade;
-    }
-    @Override
-    public void imprimirQuantidadePorIndice()
-    {
-        for(int i = 0; i < capacidade; i++)
-        {
-            int contador = 0;
-            Node atual = tabelaEncadeada[i];
-            while (atual != null)
-            {
-                contador++;
-                atual = atual.proximo;
-            }
-            System.out.println("[" + i + "] tem" + contador);
-        }
-
     }
 }

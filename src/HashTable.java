@@ -1,42 +1,66 @@
-import javax.swing.text.TableView;
-
 public abstract class HashTable {
     protected int capacidade = 32;
     protected int tamanho;
     protected int colisoes;
-    protected String[] tabela;
+    protected final double fatorDeCarga = 0.75;
 
     public HashTable(int capacidade) {
         this.capacidade = capacidade;
         this.tamanho = 0;
         this.colisoes = 0;
-        this.tabela = new String[capacidade];
     }
 
-    public abstract void inserir(String chave); //metodo para inserir dados na tabela
-    public abstract boolean buscar(String chave);//metodo para buscar dados na tabela
+    public abstract void inserir(String chave);
+    public abstract boolean buscar(String chave);
+    protected abstract int calcularIndice(String chave);
+    protected abstract void reinserirTodos(Node[] novaTabela, int novaCapacidade);
+    protected abstract void atualizarTabela(Node[] novaTabela);
+    public abstract void imprimirQuantidadePorIndice();
 
-    public int getCapacidade(){
+    protected int calcularIndice(String chave, int novaCapacidade) {
+        int hash = 7;
+        for (char c : chave.toCharArray()) {
+            hash = hash * 31 + c;
+        }
+        return Math.abs(hash) % novaCapacidade;
+    }
+
+    protected void rehash() {
+        int novaCapacidade = capacidade * 2;
+        Node[] novaTabela = new Node[novaCapacidade];
+
+        reinserirTodos(novaTabela, novaCapacidade);
+
+        this.capacidade = novaCapacidade;
+        this.colisoes = 0;
+        this.tamanho = calcularNovoTamanho(novaTabela);
+        atualizarTabela(novaTabela);
+    }
+
+    protected int calcularNovoTamanho(Node[] novaTabela) {
+        int count = 0;
+        for (Node head : novaTabela) {
+            Node atual = head;
+            while (atual != null) {
+                count++;
+                atual = atual.proximo;
+            }
+        }
+        return count;
+    }
+
+    public int getCapacidade() {
         return capacidade;
     }
 
-    public int getTamanho(){
+    public int getTamanho() {
         return tamanho;
     }
 
-    public int getColisoes(){
+    public int getColisoes() {
         return colisoes;
     }
 
-    protected abstract int calcularIndice(String chave);
-
-
-
     public void imprimirTabela() {
-        for (int i = 0; i < capacidade; i++) {
-            System.out.println("[" + i + "] " + (tabela[i] != null ? tabela[i] : "-"));
-        }
     }
-
-    public abstract void imprimirQuantidadePorIndice();
 }
